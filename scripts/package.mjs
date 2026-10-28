@@ -63,7 +63,7 @@ try {
       .replaceAll('(98-CSS-LICENSE.txt)', '(LICENSE-98-css.txt)');
     await writeFile(path.join(directory, 'ASSET-SOURCES.md'), notices);
     // Release folders carry the same code/resource distinction as the source repository.
-    for (const filename of ['README.md', 'README.ko.md', 'THIRD_PARTY_NOTICES.md']) {
+    for (const filename of ['README.md', 'THIRD_PARTY_NOTICES.md']) {
       let content = await readFile(path.join(root, filename), 'utf8');
       content = content.replaceAll('(LICENSE)', '(LICENSE-Minesweeper.txt)')
         .replaceAll('(src/assets/ASSET-SOURCES.md)', '(ASSET-SOURCES.md)')

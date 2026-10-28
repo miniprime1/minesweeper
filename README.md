@@ -1,7 +1,5 @@
 # Minesweeper
 
-[한국어](README.ko.md)
-
 A Windows 2000 Minesweeper recreation for macOS, built with Electron.
 
 ![Minesweeper](docs/screenshot.png)
