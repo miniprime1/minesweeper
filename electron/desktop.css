@@ -1,0 +1,9 @@
+:root,body{background:#c0c0c0!important;overflow:hidden;--scale:1!important}
+#desktop{display:block;min-width:0!important;min-height:100vh!important;padding:0!important;overflow:visible}
+#game-window{position:relative!important;left:0!important;top:0!important;transform:none!important;transform-origin:top left;}
+#title-bar{-webkit-app-region:drag;app-region:drag}
+#title-bar button{-webkit-app-region:no-drag;app-region:no-drag}
+#restore-window,#reopen{display:none!important}
+.dialog{max-width:none;transform:none!important;--scale:1}
+.help-content{max-width:330px!important}
+#modal-layer{display:none!important}

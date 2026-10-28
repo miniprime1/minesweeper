@@ -1,0 +1,235 @@
+{
+  "notes": "All source rectangles use original pixels [x, y, width, height]. Display without interpolation. The lost face matches all 676 RGB pixels in the user's screenshot at [130,56,26,26].",
+  "source": "https://github.com/CobaltXII/Minesweeper",
+  "faces": {
+    "image": "Smiley.png",
+    "size": [
+      130,
+      26
+    ],
+    "normal": [
+      0,
+      0,
+      26,
+      26
+    ],
+    "pressed": [
+      26,
+      0,
+      26,
+      26
+    ],
+    "surprised": [
+      52,
+      0,
+      26,
+      26
+    ],
+    "won": [
+      78,
+      0,
+      26,
+      26
+    ],
+    "lost": [
+      104,
+      0,
+      26,
+      26
+    ]
+  },
+  "cells": {
+    "image": "Tile.png",
+    "size": [
+      128,
+      32
+    ],
+    "closed": [
+      0,
+      0,
+      16,
+      16
+    ],
+    "empty": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "flag": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "question": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "pressedQuestion": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "mine": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "wrongFlag": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "explodedMine": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "one": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "two": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "three": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "four": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "five": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "six": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "seven": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "eight": [
+      112,
+      16,
+      16,
+      16
+    ]
+  },
+  "counterLegacy": {
+    "image": "CounterLegacy.png",
+    "size": [
+      13,
+      276
+    ],
+    "minus": [
+      0,
+      0,
+      13,
+      23
+    ],
+    "blank": [
+      0,
+      23,
+      13,
+      23
+    ],
+    "notes": "Original resource 420.bmp, converted losslessly to PNG. Digits 0..9 use y=(11-digit)*23. All digit RGB pixels match Counter.png."
+  },
+  "counter": {
+    "image": "Counter.png",
+    "size": [
+      130,
+      23
+    ],
+    "digitSize": [
+      13,
+      23
+    ],
+    "zero": [
+      0,
+      0,
+      13,
+      23
+    ],
+    "one": [
+      13,
+      0,
+      13,
+      23
+    ],
+    "two": [
+      26,
+      0,
+      13,
+      23
+    ],
+    "three": [
+      39,
+      0,
+      13,
+      23
+    ],
+    "four": [
+      52,
+      0,
+      13,
+      23
+    ],
+    "five": [
+      65,
+      0,
+      13,
+      23
+    ],
+    "six": [
+      78,
+      0,
+      13,
+      23
+    ],
+    "seven": [
+      91,
+      0,
+      13,
+      23
+    ],
+    "eight": [
+      104,
+      0,
+      13,
+      23
+    ],
+    "nine": [
+      117,
+      0,
+      13,
+      23
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+name: Package macOS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [arm64, x64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: pnpm/action-setup@v6
+      - uses: actions/cache@v4
+        with:
+          path: .cache/electron
+          key: electron-macOS-${{ matrix.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm test
+      - run: pnpm package:mac --arch=${{ matrix.arch }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Minesweeper-macOS-${{ matrix.arch }}
+          path: release/Minesweeper-macOS-${{ matrix.arch }}.zip
+          if-no-files-found: error

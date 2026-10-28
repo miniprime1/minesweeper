@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#008080">
+  <meta name="description" content="Classic Windows 2000 Minesweeper, with original pixel graphics, mouse controls, and game menus.">
+  <title>Minesweeper</title>
+  <link rel="stylesheet" href="style.css?v=1.0.1">
+  <link rel="icon" href="assets/minesweeper.ico" type="image/x-icon">
+</head>
+<body>
+  <main id="desktop" aria-label="Windows 2000 desktop">
+    <section id="game-window" class="window" aria-label="Minesweeper">
+      <header id="title-bar" class="title-bar">
+        <span class="app-icon" aria-hidden="true"></span>
+        <span class="title-text">Minesweeper</span>
+        <div class="window-controls">
+          <button id="minimize" class="caption-button" aria-label="Minimize" title="Minimize"><span class="min-icon"></span></button>
+          <button class="caption-button" aria-label="Maximize" title="Maximize" disabled><span class="max-icon"></span></button>
+          <button id="close-window" class="caption-button close" aria-label="Close" title="Close"><span class="close-icon"></span></button>
+        </div>
+      </header>
+      <nav class="menu-bar" aria-label="Application menu">
+        <button class="menu-button" id="game-menu-button" aria-haspopup="menu" aria-expanded="false"><u>G</u>ame</button>
+        <button class="menu-button" id="help-menu-button" aria-haspopup="menu" aria-expanded="false"><u>H</u>elp</button>
+        <div id="game-menu" class="dropdown" role="menu" hidden></div>
+        <div id="help-menu" class="dropdown" role="menu" hidden></div>
+      </nav>
+      <div class="client">
+        <div class="score-panel">
+          <div id="mine-counter" class="counter" role="img" aria-label="40 mines remaining"></div>
+          <button id="face" class="face" aria-label="New game" title="New game (F2)"><img id="face-image" src="assets/Smiley.png" width="130" height="26" alt="" draggable="false"></button>
+          <div id="timer" class="counter" role="timer" aria-label="0 seconds"></div>
+        </div>
+        <div class="board-frame"><div id="board" role="grid" aria-label="Minefield" tabindex="0"></div></div>
+      </div>
+    </section>
+    <button id="restore-window" class="restore-window" hidden><span class="app-icon" aria-hidden="true"></span><b>Minesweeper</b></button>
+    <button id="reopen" class="desktop-shortcut" hidden><span class="large-mine" aria-hidden="true"></span><span>Minesweeper</span></button>
+    <div id="modal-layer" hidden></div>
+    <div id="announcement" class="sr-only" aria-live="polite"></div>
+  </main>
+  <script type="module" src="app.js?v=1.0.1"></script>
+</body>
+</html>

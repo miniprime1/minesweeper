@@ -1,0 +1,21 @@
+# Dependencies and local caches
+node_modules/
+.cache/
+.pnpm-store/
+*.log
+
+# Generated desktop, offline, and packaged releases
+web/
+release/
+coverage/
+
+# macOS and editor files
+.DS_Store
+._*
+.idea/
+.vscode/
+
+# Local configuration
+.env
+.env.*
+!.env.example

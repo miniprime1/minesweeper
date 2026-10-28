@@ -1,0 +1,7 @@
+:root,body{margin:0;padding:0;background:#c0c0c0;overflow:hidden;--scale:1!important}
+body,#native-dialog-host{width:max-content;height:max-content}
+#native-dialog-host{display:flow-root}
+#native-dialog-host>.window.dialog{margin:0;max-width:none;transform:none!important;transform-origin:top left;--scale:1}
+.dialog .title-bar{-webkit-app-region:drag;app-region:drag}
+.dialog .title-bar button,.dialog-body{-webkit-app-region:no-drag;app-region:no-drag}
+.dialog .help-content{max-width:330px!important}

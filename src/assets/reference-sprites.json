@@ -1,0 +1,87 @@
+{
+  "image": "reference.png",
+  "imageSize": [
+    282,
+    363
+  ],
+  "notes": "Original user-supplied screenshot, copied without modification. Rectangles are x, y, width, height in original pixels. Use nearest-neighbor drawing or CSS image-rendering: pixelated.",
+  "boardOrigin": [
+    15,
+    96
+  ],
+  "cellSize": 16,
+  "sprites": {
+    "faceLost": [
+      130,
+      56,
+      26,
+      26
+    ],
+    "empty": [
+      15,
+      96,
+      16,
+      16
+    ],
+    "closed": [
+      191,
+      96,
+      16,
+      16
+    ],
+    "flag": [
+      127,
+      96,
+      16,
+      16
+    ],
+    "one": [
+      63,
+      96,
+      16,
+      16
+    ],
+    "two": [
+      127,
+      112,
+      16,
+      16
+    ],
+    "three": [
+      95,
+      144,
+      16,
+      16
+    ],
+    "four": [
+      207,
+      160,
+      16,
+      16
+    ],
+    "mine": [
+      175,
+      96,
+      16,
+      16
+    ],
+    "explodedMine": [
+      223,
+      208,
+      16,
+      16
+    ],
+    "wrongFlag": [
+      223,
+      176,
+      16,
+      16
+    ],
+    "titleIcon": [
+      5,
+      4,
+      16,
+      16
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "minesweeper",
+  "productName": "Minesweeper",
+  "version": "1.3.1",
+  "description": "A Windows 2000 Minesweeper recreation for macOS and the web.",
+  "main": "electron/main.cjs",
+  "private": true,
+  "author": "Kyumin Nam",
+  "license": "MIT",
+  "scripts": {
+    "prepare:web": "node scripts/prepare.mjs",
+    "setup:electron": "node scripts/runtime.mjs",
+    "start": "node scripts/prepare.mjs && node scripts/runtime.mjs && electron .",
+    "dev:web": "node scripts/dev-server.mjs",
+    "build:offline": "node scripts/export-offline.mjs",
+    "package:mac": "node scripts/package.mjs",
+    "test": "node --test tests/game/*.test.mjs tests/desktop/*.test.cjs"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron": "44.9.0"
+  },
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=24",
+    "pnpm": ">=11 <12"
+  },
+  "keywords": [
+    "minesweeper",
+    "windows-2000",
+    "electron",
+    "macos"
+  ]
+}
