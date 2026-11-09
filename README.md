@@ -1,6 +1,6 @@
 # Minesweeper
 
-A Windows 2000 Minesweeper recreation for Windows, macOS, and Linux, built with Electron.
+The Windows 2000 Minesweeper recreation for Windows, macOS, and Linux, built with Electron.
 
 ![Minesweeper](docs/screenshot.png)
 
