@@ -16,7 +16,7 @@ function validSize(value) {
   return !!value && Number.isInteger(value.width) && Number.isInteger(value.height) && value.width >= 120 && value.width <= 4096 && value.height >= 180 && value.height <= 4096;
 }
 function validLayout(value){
-  return !!value&&validSize(value.base)&&validSize(value.extent)&&value.base.width<=1024&&value.base.height<=1024&&value.extent.width>=value.base.width&&value.extent.height>=value.base.height&&value.extent.width<=1600&&value.extent.height<=1600;
+  return !!value&&validSize(value.base)&&validSize(value.extent)&&value.base.width<=1024&&value.base.height<=1024&&value.extent.width===value.base.width&&value.extent.height===value.base.height;
 }
 function allowedExternal(value) {
   const sources=new Set(['https://opensource.org/license/mit','https://github.com/CobaltXII/Minesweeper','https://github.com/wildptr/winmine/tree/master/data','https://github.com/jdan/98.css']);

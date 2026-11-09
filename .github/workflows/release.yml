@@ -1,4 +1,4 @@
-name: Package macOS
+name: Package desktop apps
 
 on:
   workflow_dispatch:
@@ -8,11 +8,15 @@ permissions:
 
 jobs:
   package:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        arch: [arm64, x64]
+        include:
+          - {os: macos-latest, platform: darwin, arch: arm64, artifact: 'Minesweeper-macOS-arm64', extension: tar.gz}
+          - {os: macos-latest, platform: darwin, arch: x64, artifact: 'Minesweeper-macOS-x64', extension: tar.gz}
+          - {os: windows-latest, platform: win32, arch: x64, artifact: 'Minesweeper-Windows-x64', extension: zip}
+          - {os: ubuntu-latest, platform: linux, arch: x64, artifact: 'Minesweeper-Linux-x64', extension: tar.gz}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,12 +26,12 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: .cache/electron
-          key: electron-macOS-${{ matrix.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: electron-${{ matrix.platform }}-${{ matrix.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm test
-      - run: pnpm package:mac --arch=${{ matrix.arch }}
+      - run: pnpm package --platform=${{ matrix.platform }} --arch=${{ matrix.arch }}
       - uses: actions/upload-artifact@v4
         with:
-          name: Minesweeper-macOS-${{ matrix.arch }}
-          path: release/Minesweeper-macOS-${{ matrix.arch }}.zip
+          name: ${{ matrix.artifact }}
+          path: release/${{ matrix.artifact }}.${{ matrix.extension }}
           if-no-files-found: error

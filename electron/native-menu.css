@@ -1,0 +1,5 @@
+:root,body{margin:0;padding:0;background:#c0c0c0;overflow:hidden;--scale:1!important;user-select:none}
+#native-menu{position:relative;inset:auto;width:100vw;height:100vh;min-width:0}
+#native-menu button{outline:none}
+#native-menu button:not(.selected){background:transparent;color:#000}
+#native-menu button.selected{background:#0a246a;color:#fff}

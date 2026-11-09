@@ -1,9 +1,10 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
+const path=require('node:path');
 const {assetPath,validSize,validLayout,trustedURL,allowedExternal}=require('../../electron/policy.cjs');
 test('local assets cannot escape the packaged web root',()=>{
-  const root='/app/web';
-  assert.equal(assetPath(root,'minesweeper://app/assets/Tile.png'),'/app/web/assets/Tile.png');
+  const root=path.resolve('/app/web');
+  assert.equal(assetPath(root,'minesweeper://app/assets/Tile.png'),path.join(root,'assets','Tile.png'));
   assert.equal(assetPath(root,'https://example.com/index.html'),null);
   assert.equal(assetPath(root,'minesweeper://app/%2e%2e%2fsecret'),null);
   assert.equal(assetPath(root,'minesweeper://app/%00'),null);
@@ -23,12 +24,12 @@ test('external links are restricted to the resource attribution page',()=>{
   for(const url of ['https://opensource.org/license/mit','https://github.com/wildptr/winmine/tree/master/data','https://github.com/jdan/98.css'])assert.equal(allowedExternal(url),true);
   for(const url of ['https://github.com/jdan/98.css/evil','https://github.com/jdan/98.css?redirect=evil','https://opensource.org/other','http://github.com/jdan/98.css'])assert.equal(allowedExternal(url),false);
 });
-test('layout IPC accepts presets and temporary menu or dialog extents',()=>{
+test('layout IPC keeps the main window exactly the board size, independent of popups',()=>{
   for(const base of [{width:170,height:251},{width:282,height:363},{width:506,height:363}]){
     assert.equal(validLayout({base,extent:{...base}}),true);
-    assert.equal(validLayout({base,extent:{width:Math.max(base.width,380),height:Math.max(base.height,460)}}),true);
+    assert.equal(validLayout({base,extent:{width:Math.max(base.width,380),height:Math.max(base.height,460)}}),false);
   }
-  assert.equal(validLayout({base:{width:1024,height:1024},extent:{width:1600,height:1600}}),true);
+  assert.equal(validLayout({base:{width:1024,height:1024},extent:{width:1024,height:1024}}),true);
 });
 test('layout IPC rejects malformed dimensions and extents smaller than the game',()=>{
   const base={width:282,height:363},extent={...base};

@@ -9,7 +9,7 @@ const target = path.join(root, 'web');
 await rm(target, { recursive: true, force: true });
 await mkdir(target, { recursive: true });
 await cp(path.join(root, 'src'), target, { recursive: true });
-for (const file of ['desktop.css', 'native-dialog.html', 'native-dialog.css']) {
+for (const file of ['desktop.css', 'native-dialog.html', 'native-dialog.css', 'native-menu.html', 'native-menu.css']) {
   await cp(path.join(root, 'electron', file), path.join(target, file));
 }
 const index = path.join(target, 'index.html');

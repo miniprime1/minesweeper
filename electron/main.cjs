@@ -8,10 +8,13 @@ const {mkdirSync,existsSync}=require('node:fs');
 const {ORIGIN,trustedURL,assetPath,validLayout,allowedExternal}=require('./policy.cjs');
 const {MIN_ZOOM,MAX_ZOOM,clampZoom,fitLayout,zoomFromBounds}=require('./window-layout.cjs');
 const {NativeDialogs}=require('./native-dialogs.cjs');
+const {NativeMenus}=require('./native-menus.cjs');
 const {TaskbarProgress}=require('./taskbar-progress.cjs');
 const smokeTest=process.argv.includes('--smoke-test');
 const screenshotArgument=process.argv.find(value=>value.startsWith('--capture='));
 app.setName('Minesweeper');
+// Exact window/popup positioning uses X11, including XWayland desktops.
+if(process.platform==='linux')app.commandLine.appendSwitch('ozone-platform','x11');
 const legacyData=path.join(app.getPath('appData'),'Minesweeper 2000');
 if(existsSync(legacyData))app.setPath('userData',legacyData);
 if(smokeTest){
@@ -25,6 +28,7 @@ let preferredZoom=1,zoom=1;
 let layout={base:{width:282,height:363},extent:{width:282,height:363}};
 let taskbarProgress=null;
 const nativeDialogs=new NativeDialogs({BrowserWindow,screen,parent:()=>window,zoom:()=>zoom,sendToParent:value=>window?.webContents.send('minesweeper:dialog-action',value)});
+const nativeMenus=new NativeMenus({BrowserWindow,screen,parent:()=>window,zoom:()=>zoom,sendToParent:value=>window?.webContents.send('minesweeper:menu-action',value)});
 const senderIsTrusted=event=>window&&!window.isDestroyed()&&event.sender===window.webContents&&event.senderFrame===window.webContents.mainFrame&&trustedURL(event.senderFrame.url);
 const preferencePath=()=>path.join(app.getPath('userData'),'desktop-window.json');
 function saveZoom(){
@@ -35,6 +39,7 @@ function reportZoom(){
   if(!window||window.isDestroyed())return;
   window.webContents.send('minesweeper:zoom-state',zoom);
   nativeDialogs.refreshZoom();
+  nativeMenus.reposition();
   const item=Menu.getApplicationMenu()?.getMenuItemById('zoom-level');
   if(item)item.label='Zoom: '+Math.round(zoom*100)+'%';
 }
@@ -88,6 +93,9 @@ else{
     ipcMain.on('minesweeper:dialog-ready',event=>nativeDialogs.handleReady(event));
     ipcMain.on('minesweeper:dialog-action',(event,value)=>nativeDialogs.handleAction(event,value));
     ipcMain.on('minesweeper:dialog-size',(event,value)=>nativeDialogs.handleSize(event,value));
+    ipcMain.on('minesweeper:menu',(event,value)=>{if(senderIsTrusted(event))nativeMenus.update(value);});
+    ipcMain.on('minesweeper:menu-ready',event=>nativeMenus.handleReady(event));
+    ipcMain.on('minesweeper:menu-action',(event,value)=>nativeMenus.handleAction(event,value));
     ipcMain.on('minesweeper:action',(event,action)=>{
       if(!senderIsTrusted(event))return;
       if(action==='minimize')window.minimize();
@@ -108,8 +116,9 @@ else{
   app.on('before-quit',()=>{clearTimeout(saveTimer);fs.writeFile(preferencePath(),JSON.stringify({zoom:preferredZoom})).catch(()=>{});});
 }
 function createWindow(){
-  window=new BrowserWindow({width:282,height:363,useContentSize:true,show:false,frame:false,roundedCorners:false,transparent:false,backgroundColor:'#c0c0c0',hasShadow:false,resizable:true,minWidth:128,minHeight:189,maximizable:false,fullscreenable:false,title:'Minesweeper',webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,webSecurity:true,spellcheck:false}});
+  window=new BrowserWindow({width:282,height:363,useContentSize:true,show:false,frame:false,roundedCorners:false,transparent:false,backgroundColor:'#c0c0c0',hasShadow:false,resizable:true,minWidth:128,minHeight:189,maximizable:false,fullscreenable:false,title:'Minesweeper',icon:path.join(__dirname,'../web/assets/app-icon.png'),webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,webSecurity:true,spellcheck:false}});
   firstFit=true;
+  if(process.platform!=='darwin')window.setMenuBarVisibility(false);
   window.webContents.setVisualZoomLevelLimits(1,1);
   window.webContents.setWindowOpenHandler(({url})=>{if(allowedExternal(url))shell.openExternal(url);return{action:'deny'};});
   window.webContents.on('will-navigate',(event,url)=>{if(!trustedURL(url))event.preventDefault();});
@@ -124,9 +133,11 @@ function createWindow(){
     if(Math.abs(next-zoom)<0.005)return;
     zoom=next;preferredZoom=next;window.webContents.setZoomFactor(zoom);reportZoom();saveZoom();
   });
-  window.on('minimize',()=>window?.webContents.send('minesweeper:minimize'));
+  window.on('blur',()=>nativeMenus.dismiss());
+  window.on('move',()=>nativeMenus.reposition());
+  window.on('minimize',()=>{nativeMenus.dismiss();window?.webContents.send('minesweeper:minimize');});
   window.on('restore',()=>window?.webContents.send('minesweeper:restore'));
-  window.on('close',()=>{nativeDialogs.close();taskbarProgress?.reset();});
+  window.on('close',()=>{nativeMenus.close();nativeDialogs.close();taskbarProgress?.reset();});
   window.on('closed',()=>{window=null;});
   window.loadURL(ORIGIN+'/index.html');
   if(smokeTest)window.webContents.once('did-finish-load',()=>runSmokeTest().catch(error=>{console.error(error);app.exit(1);}));

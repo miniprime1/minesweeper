@@ -19,6 +19,7 @@ class FakeWindow extends EventEmitter{
   setContentSize(width,height){this.sizeCalls.push({width,height});Object.assign(this.bounds,{width,height});}
   setPosition(x,y){Object.assign(this.bounds,{x,y});}
   setTitle(title){this.title=title;}
+  setMenuBarVisibility(visible){this.menuBarVisible=visible;}
   show(){this.shown++;}
   focus(){this.focused++;}
 }
@@ -35,6 +36,7 @@ test('dialogs use a separate parented movable non-modal window and isolated rend
   const child=manager.window;
   assert.equal(child.options.parent,owner);assert.equal(child.options.modal,false);assert.equal(child.options.frame,false);assert.equal(child.options.resizable,false);assert.equal(child.options.show,false);
   assert.equal(child.options.webPreferences.nodeIntegration,false);assert.equal(child.options.webPreferences.contextIsolation,true);assert.equal(child.options.webPreferences.sandbox,true);
+  assert.equal(child.menuBarVisible,false);
   assert.equal(child.url,DIALOG_URL);assert.deepEqual(child.webContents.openHandler({url:'https://example.com'}),{action:'deny'});
   manager.handleReady(eventFor(child));assert.deepEqual(child.webContents.messages.at(-1),['minesweeper:dialog-snapshot',snapshot()]);
   manager.close();assert.equal(child.destroyed,true);

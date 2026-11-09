@@ -3,6 +3,24 @@ const {ipcRenderer}=require('electron');
 window.addEventListener('DOMContentLoaded',async()=>{
   const game=document.getElementById('game-window'),desktop=document.getElementById('desktop'),modal=document.getElementById('modal-layer');
   let scheduled=false,lastLayout='',zoom=1;
+  let sourceMenu=null,menuToken=0,lastMenu='';
+  function syncMenu(){
+    const node=document.querySelector('.dropdown:not([hidden])');
+    if(!node||game.hidden||!modal.hidden){
+      if(sourceMenu){sourceMenu=null;lastMenu='';ipcRenderer.send('minesweeper:menu',null);}
+      return;
+    }
+    if(node!==sourceMenu){sourceMenu=node;menuToken++;}
+    const kind=node.id==='game-menu'?'game':'help',bounds=node.getBoundingClientRect();
+    const button=document.getElementById(kind+'-menu-button').getBoundingClientRect();
+    const items=[...node.children].map(item=>item.matches('button')?{
+      id:item.dataset.action,label:[...item.childNodes].filter(child=>child.nodeType===3).map(child=>child.textContent).join(''),
+      shortcut:item.querySelector('.shortcut')?.textContent||'',checked:item.getAttribute('aria-checked')==='true',checkable:item.role==='menuitemcheckbox'
+    }:null);
+    const value={token:menuToken,kind,anchor:{x:bounds.x,y:bounds.y,above:button.y},size:{width:bounds.width,height:bounds.height},items,
+      selected:node.contains(document.activeElement)?document.activeElement.dataset.action||'':''};
+    const key=JSON.stringify(value);if(key!==lastMenu){lastMenu=key;ipcRenderer.send('minesweeper:menu',value);}
+  }
   let lastProgress='';
   function reportProgress(){
     const board=document.getElementById('board');if(!board)return;
@@ -45,12 +63,11 @@ window.addEventListener('DOMContentLoaded',async()=>{
   function fit(){
     scheduled=false;reportProgress();if(game.hidden)return;
     const base={width:game.offsetWidth,height:game.offsetHeight};
-    let width=base.width,height=base.height;
-    for(const menu of document.querySelectorAll('.dropdown:not([hidden])')){const bounds=menu.getBoundingClientRect();width=Math.max(width,bounds.right);height=Math.max(height,bounds.bottom);}
-    const value={base,extent:{width:Math.max(170,Math.ceil(width)),height:Math.max(200,Math.ceil(height))}},key=JSON.stringify(value);
+    const value={base,extent:{...base}},key=JSON.stringify(value);
     if(key!==lastLayout){lastLayout=key;ipcRenderer.send('minesweeper:layout',value);}
     updateZoomControl();
     syncDialog();
+    syncMenu();
   }
   // A larger child can fully cover this window. macOS then pauses its animation
   // frames, so dialog close/replace messages must not wait for a paint frame.
@@ -64,6 +81,17 @@ window.addEventListener('DOMContentLoaded',async()=>{
     else if(event.target.closest('#minimize'))ipcRenderer.send('minesweeper:action','minimize');
   },true);
   document.addEventListener('change',event=>{if(event.target.id==='pixel-scale'){event.stopImmediatePropagation();ipcRenderer.send('minesweeper:zoom',Number(event.target.value));}},true);
+  document.addEventListener('focusin',scheduleFit);
+  ipcRenderer.on('minesweeper:menu-action',(_event,value)=>{
+    if(!sourceMenu||value?.token!==menuToken)return;
+    if(value.kind==='dismiss')document.getElementById(sourceMenu.id+'-button').click();
+    else{
+      const node=[...sourceMenu.querySelectorAll('button')].find(button=>button.dataset.action===value.id);
+      if(value.kind==='hover')node?.focus({preventScroll:true});
+      else if(value.kind==='activate')node?.click();
+    }
+    scheduleFit();
+  });
   ipcRenderer.on('minesweeper:zoom-state',(_event,value)=>{zoom=value;updateZoomControl();syncDialog();});
   ipcRenderer.on('minesweeper:dialog-action',(_event,value)=>{
     if(!nativeDialogOpen||value?.token!==dialogToken)return;

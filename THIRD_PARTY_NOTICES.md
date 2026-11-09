@@ -8,7 +8,7 @@ The program code and synthesized sound effects are licensed under the [MIT Licen
 | --- | --- |
 | `src/assets/Smiley.png`, `Tile.png`, `Counter.png` | Original Microsoft artwork, ripped by Black Squirrel and Emmett N.; obtained from [CobaltXII/Minesweeper](https://github.com/CobaltXII/Minesweeper). That repository's MIT license covers its code; its README reserves sprite ownership to the respective owners. |
 | `src/assets/CounterLegacy.png`, `minesweeper.ico` | Original WinMine bitmap and icon from [wildptr/winmine/data](https://github.com/wildptr/winmine/tree/master/data). `420.bmp` was converted losslessly to PNG. The repository supplies no license file. |
-| `resources/Minesweeper.icns` | macOS icon converted from `src/assets/minesweeper.ico`; same original artwork and credit. |
+| `resources/Minesweeper.icns`, `src/assets/app-icon.png` | Desktop icons converted from `src/assets/minesweeper.ico`; same original artwork and credit. |
 | `src/assets/reference.png` | Windows 2000 screenshot supplied by the original requester. |
 
 Original Microsoft artwork remains the property of its respective rights holders. No permission to relicense that artwork under MIT is implied. `sprites.json` and `reference-sprites.json` record bitmap coordinates.
@@ -19,7 +19,7 @@ Original Microsoft artwork remains the property of its respective rights holders
 
 ## Runtime and dependencies
 
-The macOS app uses [Electron](https://github.com/electron/electron) and Chromium. Packaged releases include the Electron `LICENSE` and Chromium `LICENSES.chromium.html`. Development dependencies retain their own licenses in their installed packages.
+The desktop app uses [Electron](https://github.com/electron/electron) and Chromium. Packaged releases include the Electron and Chromium licenses in `resources/notices` (`Minesweeper.app/Contents/Resources/notices` on macOS). Development dependencies retain their own licenses in their installed packages.
 
 ## Behavioral reference
 

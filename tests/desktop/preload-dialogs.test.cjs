@@ -6,7 +6,7 @@ const vm=require('node:vm');
 const {EventEmitter}=require('node:events');
 const source=fs.readFileSync(require.resolve('../../electron/preload.cjs'),'utf8');
 
-async function renderer(){
+async function renderer(menu=null){
   const sent=[],ipc=new EventEmitter(),listeners=new Map();
   ipc.send=(channel,value)=>sent.push({channel,value});
   const field={tagName:'INPUT',value:'16',checked:false,dataset:{}};
@@ -25,7 +25,7 @@ async function renderer(){
   const elements={'game-window':game,desktop:{},'modal-layer':modal,board};
   const document={
     getElementById:id=>elements[id]||null,
-    querySelectorAll:()=>[],querySelector:()=>null,images:[],
+    querySelectorAll:()=>menu?[menu]:[],querySelector:()=>menu,images:[],
     fonts:{ready:Promise.resolve()},addEventListener(){},
   };
   let mutation;
@@ -49,6 +49,12 @@ test('a dialog larger than the board never expands the parent game extent',async
   const snapshot=app.sent.find(item=>item.channel==='minesweeper:dialog').value;
   assert.equal(snapshot.title,'Custom Field');
   assert.equal(snapshot.fields[0].value,'16');
+});
+test('an overflowing menu never changes the main window dimensions',async()=>{
+  // Even if a menu reaches far outside the board, only its own popup may grow.
+  const app=await renderer({getBoundingClientRect:()=>({right:460,bottom:500})});
+  const layout=app.sent.find(item=>item.channel==='minesweeper:layout').value;
+  assert.deepEqual(JSON.parse(JSON.stringify(layout)),{base:{width:282,height:363},extent:{width:282,height:363}});
 });
 
 test('child form values and closing synchronize while parent animation frames are paused',async()=>{

@@ -7,3 +7,5 @@
 .dialog{max-width:none;transform:none!important;--scale:1}
 .help-content{max-width:330px!important}
 #modal-layer{display:none!important}
+/* Keep source menus measurable and keyboard-focusable; the native popup paints them. */
+.dropdown{opacity:0!important;pointer-events:none!important}

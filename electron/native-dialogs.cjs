@@ -18,6 +18,7 @@ class NativeDialogs{
     const parent=this.parent();if(!parent)return;
     const win=new this.BrowserWindow({parent,modal:false,width:360,height:280,useContentSize:true,show:false,frame:false,roundedCorners:false,backgroundColor:'#c0c0c0',hasShadow:false,resizable:false,minimizable:false,maximizable:false,fullscreenable:false,title:this.snapshot.title,webPreferences:{preload:path.join(__dirname,'dialog-preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,webSecurity:true,spellcheck:false}});
     this.window=win;this.ready=false;this.firstSize=true;this.lastSize=null;
+    win.setMenuBarVisibility(false);
     win.webContents.setWindowOpenHandler(()=>({action:'deny'}));
     win.webContents.on('will-navigate',(event,url)=>{if(url!==DIALOG_URL)event.preventDefault();});
     win.webContents.on('will-attach-webview',event=>event.preventDefault());
